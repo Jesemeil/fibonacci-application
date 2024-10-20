@@ -34,7 +34,7 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          docker push your-dockerhub-username/fibonacci-application:latest
+          docker push jesemeil/fibonacci-application:latest
 
   deploy:
     runs-on: ubuntu-latest
