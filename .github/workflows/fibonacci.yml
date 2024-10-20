@@ -48,8 +48,7 @@ jobs:
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_SSH_KEY }}
           script: |
-            docker pull your-dockerhub-username/fibonacci-application:latest
+            docker pull jesemeil/fibonacci-application:latest
             docker stop fibonacci-application || true
             docker rm fibonacci-application || true
-            docker run -d --name fibonacci-application -p 8080:8080 your-dockerhub-username/fibonacci-application:latest
-          timeout: 60s
+            docker run -d --name fibonacci-application -p 8080:8080 jesemeil/fibonacci-application:latest
