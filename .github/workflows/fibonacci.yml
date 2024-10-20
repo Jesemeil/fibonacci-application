@@ -52,3 +52,4 @@ jobs:
             docker stop fibonacci-application || true
             docker rm fibonacci-application || true
             docker run -d --name fibonacci-application -p 8080:8080 jesemeil/fibonacci-application:latest
+          timeout: 60s
