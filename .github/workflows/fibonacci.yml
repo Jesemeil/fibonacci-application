@@ -60,17 +60,17 @@ jobs:
               -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
               mysql:8.0.39
 
-            # Pull latest application image and run container
-            docker pull jesemeil/fibonacci-application:latest
-            docker stop fibonacci-application || true
-            docker rm fibonacci-application || true
-            docker run -d --name fibonacci-application --network fibonacci-network -p 8080:8080 \
-              -e SPRING_DATASOURCE_URL=jdbc:mysql://fibonacci-db:3306/fibonacci_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true \
-              -e SPRING_DATASOURCE_USERNAME=${{ secrets.MYSQL_USERNAME }} \
-              -e SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
+             
+             # Pull latest application image and run container
+             docker pull jesemeil/fibonacci-application:latest
+             docker stop fibonacci-application || true
+             docker rm fibonacci-application || true
+  
+             docker run -d --name fibonacci-application --network fibonacci-network -p 8080:8080 \
+              -e "SPRING_DATASOURCE_URL=jdbc:mysql://fibonacci-db:3306/fibonacci_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true" \
+              -e SPRING_DATASOURCE_USERNAME="${{ secrets.MYSQL_USERNAME }}" \
+              -e SPRING_DATASOURCE_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
               jesemeil/fibonacci-application:latest
-
-
 
 
 
