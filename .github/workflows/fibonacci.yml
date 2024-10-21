@@ -48,32 +48,28 @@ jobs:
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_SSH_KEY }}
           script: |
-            # Pull the latest Docker image
-            docker pull jesemeil/fibonacci-application:latest
-            
-            # Stop and remove existing application container
-            docker stop fibonacci-application || true
-            docker rm fibonacci-application || true
-            
-            # Run application container
-            docker run -d --name fibonacci-application -p 8080:8080 \
-              -e SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/fibonacci_db \
-              -e SPRING_DATASOURCE_USERNAME=${{ secrets.MYSQL_USERNAME }} \
-              -e SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
-              jesemeil/fibonacci-application:latest
-            
-            # Pull the latest MySQL image
+            # Create Docker network
+            docker network create fibonacci-network || true
+
+            # Pull latest MySQL image and run container
             docker pull mysql:8.0.39
-            
-            # Stop and remove existing database container
             docker stop fibonacci-db || true
             docker rm fibonacci-db || true
-            
-            # Run database container
-            docker run -d --name fibonacci-db -p 3307:3306 \
+            docker run -d --name fibonacci-db --network fibonacci-network -p 3307:3306 \
               -e MYSQL_DATABASE=fibonacci_db \
               -e MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }} \
               mysql:8.0.39
+
+            # Pull latest application image and run container
+            docker pull jesemeil/fibonacci-application:latest
+            docker stop fibonacci-application || true
+            docker rm fibonacci-application || true
+            docker run -d --name fibonacci-application --network fibonacci-network -p 8080:8080 \
+              -e SPRING_DATASOURCE_URL=jdbc:mysql://fibonacci-db:3306/fibonacci_db \
+              -e SPRING_DATASOURCE_USERNAME=${{ secrets.MYSQL_USERNAME }} \
+              -e SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
+              jesemeil/fibonacci-application:latest
+
 
 
 
