@@ -65,7 +65,7 @@ jobs:
             docker stop fibonacci-application || true
             docker rm fibonacci-application || true
             docker run -d --name fibonacci-application --network fibonacci-network -p 8080:8080 \
-              -e SPRING_DATASOURCE_URL=jdbc:mysql://fibonacci-db:3306/fibonacci_db \
+              -e SPRING_DATASOURCE_URL=jdbc:mysql://fibonacci-db:3306/fibonacci_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true \
               -e SPRING_DATASOURCE_USERNAME=${{ secrets.MYSQL_USERNAME }} \
               -e SPRING_DATASOURCE_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
               jesemeil/fibonacci-application:latest
